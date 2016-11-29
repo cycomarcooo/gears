@@ -21,27 +21,39 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
-namespace Facebook\HttpClients;
+namespace Facebook\PseudoRandomString;
 
-/**
- * Interface FacebookHttpClientInterface
- *
- * @package Facebook
- */
-interface FacebookHttpClientInterface
+use Facebook\Exceptions\FacebookSDKException;
+
+class RandomBytesPseudoRandomStringGenerator implements PseudoRandomStringGeneratorInterface
 {
+    use PseudoRandomStringGeneratorTrait;
+
     /**
-     * Sends a request to the server and returns the raw response.
-     *
-     * @param string $url     The endpoint to send the request to.
-     * @param string $method  The request method.
-     * @param string $body    The body of the request.
-     * @param array  $headers The request headers.
-     * @param int    $timeOut The timeout in seconds for the request.
-     *
-     * @return \Facebook\Http\GraphRawResponse Raw response from the server.
-     *
-     * @throws \Facebook\Exceptions\FacebookSDKException
+     * @const string The error message when generating the string fails.
      */
-    public function send($url, $method, $body, array $headers, $timeOut);
+    const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from random_bytes(). ';
+
+    /**
+     * @throws FacebookSDKException
+     */
+    public function __construct()
+    {
+        if (!function_exists('random_bytes')) {
+            throw new FacebookSDKException(
+                static::ERROR_MESSAGE .
+                'The function random_bytes() does not exist.'
+            );
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPseudoRandomString($length)
+    {
+        $this->validateLength($length);
+
+        return $this->binToHex(random_bytes($length), $length);
+    }
 }

@@ -14,7 +14,7 @@ $fb = new Facebook\Facebook([
 $helper = $fb->getRedirectLoginHelper();
 
 try {
-	
+
 	$accessToken = $helper->getAccessToken();
 
 } catch( Facebook\Exceptions\FacebookResponseException $e ) {
@@ -45,7 +45,7 @@ if ( isset( $accessToken ) ) {
   	$user_id = '';
 
 	try {
-	  	
+
 	  	$response = $fb->get('/me?fields=id,name,email,first_name,last_name');
 	  	$user = $response->getGraphUser();
 
@@ -95,7 +95,7 @@ if ( isset( $accessToken ) ) {
 		$user_id_by_email = email_exists( $user_email );
 
 		if ( $user_id_by_email ) {
-			
+
 			$user = get_user_by( 'id', $user_id_by_email );
 
 			if ( $user ) {
@@ -103,7 +103,7 @@ if ( isset( $accessToken ) ) {
 				wp_set_auth_cookie ( $user->ID );
 
 				// if buddypress is enabled redirect to its profile
-				if ( function_exists( 'bp_loggedin_user_domain' ) ) {			
+				if ( function_exists( 'bp_loggedin_user_domain' ) ) {
 					wp_safe_redirect( bp_core_get_user_domain( $user->ID ) );
 				} else {
 					// else just redirect to homepage
@@ -113,7 +113,7 @@ if ( isset( $accessToken ) ) {
 			} else {
 
 				wp_safe_redirect( home_url() );
-				
+
 			}
 		} else {
 
@@ -121,7 +121,7 @@ if ( isset( $accessToken ) ) {
 
 			// Find available username.
 			$username = $this->sanitizeUserName( $proposed_username, $index = 1, $copy = $proposed_username );
-			
+
 			// Create the user.
 			$password = wp_generate_password( $length = 12, $include_standard_special_chars = false );
 
@@ -156,7 +156,7 @@ if ( isset( $accessToken ) ) {
 
 				session_destroy();
 				wp_safe_redirect( wp_login_url() . '?error=true&type=gears_username_or_email_exists');
-				
+
 				return;
 			}
 
@@ -168,7 +168,7 @@ if ( isset( $accessToken ) ) {
 		session_destroy();
 
 		wp_safe_redirect(wp_login_url().'?error=true&type=fb_error');
-		
+
 		return;
 	}
 
@@ -177,7 +177,7 @@ if ( isset( $accessToken ) ) {
 	session_destroy();
 
 	wp_safe_redirect(wp_login_url().'?error=true&type=fb_error');
-		
+
 	return;
 
 }
