@@ -10,8 +10,8 @@ defined( 'ABSPATH' ) || exit;
 
 if ( version_compare( PHP_VERSION, '5.4.0', '<') ) {
 
-  die( 'Facebook Connect SDK requires PHP 5.4 or higher. 
-  		Please contact your hosting provider and kindly 
+  die( 'Facebook Connect SDK requires PHP 5.4 or higher.
+  		Please contact your hosting provider and kindly
   		tell them to update the PHP for your hosting. Thank you.' );
 
 }
@@ -28,7 +28,7 @@ if ( isset( $_GET['callback'] ) ) {
 	$fb = new Facebook\Facebook([
   		'app_id' => $this->appID,
   		'app_secret' => $this->appSecret,
-  		'default_graph_version' => 'v2.2',
+  		'default_graph_version' => 'v2.5',
  	]);
 
 	$helper = $fb->getRedirectLoginHelper();

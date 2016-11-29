@@ -8,7 +8,7 @@
 $fb = new Facebook\Facebook([
   		'app_id' => $this->appID,
   		'app_secret' => $this->appSecret,
-  		'default_graph_version' => 'v2.2',
+  		'default_graph_version' => 'v2.5',
  	]);
 
 $helper = $fb->getRedirectLoginHelper();
