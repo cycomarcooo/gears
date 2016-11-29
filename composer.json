@@ -1,0 +1,17 @@
+{
+    "name": "cycomarcooo/gears",
+    "description": "BuddyPress Goodies.",
+    "type": "wordpress-plugin",
+    "license": "GPL2+",
+    "version": "fb-connect-only",
+    "authors": [
+        {
+            "name": "Joseph Gabito",
+            "email": "codehaiku.io@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}
