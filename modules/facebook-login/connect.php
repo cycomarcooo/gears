@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( version_compare( PHP_VERSION, '5.4.0', '<') ) {
+if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 
   die( 'Facebook Connect SDK requires PHP 5.4 or higher.
   		Please contact your hosting provider and kindly

@@ -40,7 +40,7 @@ require_once GEARS_APP_PATH . 'locale.php';
  * Require updater file to check the version periodically
  * for changes and updates
  */
-require_once GEARS_APP_PATH . 'update-check.php';
+//require_once GEARS_APP_PATH . 'update-check.php';
 
 /**
  * Require main library file

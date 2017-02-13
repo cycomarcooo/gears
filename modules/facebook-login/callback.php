@@ -63,14 +63,14 @@ if ( isset( $accessToken ) ) {
 	  	$user_last_name = $user['last_name'];
 
 
-	} catch( Facebook\Exceptions\FacebookResponseException $e ) {
+	} catch ( Facebook\Exceptions\FacebookResponseException $e ) {
 
 	  	// When Graph returns an error
 	  	echo 'Graph returned an error: ' . $e->getMessage();
 
 	  	exit;
 
-	} catch( Facebook\Exceptions\FacebookSDKException $e ) {
+	} catch ( Facebook\Exceptions\FacebookSDKException $e ) {
 
 	  	// When validation fails or other local issues
 	  	echo 'Facebook SDK returned an error: ' . $e->getMessage();
@@ -83,14 +83,14 @@ if ( isset( $accessToken ) ) {
 
 		session_destroy();
 
-		wp_safe_redirect(wp_login_url().'?error=true&type=fb_invalid_email');
+		wp_safe_redirect( wp_login_url() . '?error=true&type=fb_invalid_email' );
 
 		return;
 	}
 
 	if ( ! empty( $user_last_name ) || ! empty( $user_first_name ) ) {
 
-		$proposed_username = sanitize_title( sprintf('%s-%s', $user_first_name, $user_last_name ) );
+		$proposed_username = sanitize_title( sprintf( '%s-%s', $user_first_name, $user_last_name ) );
 
 		$user_id_by_email = email_exists( $user_email );
 
@@ -98,9 +98,10 @@ if ( isset( $accessToken ) ) {
 
 			$user = get_user_by( 'id', $user_id_by_email );
 
-			if ( $user ) {
+			if ( $user && 2 !== BP_Signup::check_user_status( $user_id_by_email ) ) { // user is already registered. That's great.
+                // check if user is not pending (status != 2)
 
-				wp_set_auth_cookie ( $user->ID );
+				wp_set_auth_cookie( $user->ID );
 
 				// if buddypress is enabled redirect to its profile
 				if ( function_exists( 'bp_loggedin_user_domain' ) ) {
@@ -109,56 +110,19 @@ if ( isset( $accessToken ) ) {
 					// else just redirect to homepage
 					wp_safe_redirect( get_bloginfo( 'url' ) );
 				}
-
 			} else {
+                error_log( 'user not allowed!!!' );
+    			session_destroy();
+                wp_safe_redirect( wp_login_url() . '?error=true&type=gears_user_not_allowed');
 
-				wp_safe_redirect( home_url() );
+                return;
 
 			}
-		} else {
+		} else { // User is not registerd -> not allowed to connect
+			session_destroy();
+			wp_safe_redirect( wp_login_url() . '?error=true&type=gears_user_not_allowed');
 
-			// Create the user if does not exists
-
-			// Find available username.
-			$username = $this->sanitizeUserName( $proposed_username, $index = 1, $copy = $proposed_username );
-
-			// Create the user.
-			$password = wp_generate_password( $length = 12, $include_standard_special_chars = false );
-
-			$new_userid = wp_create_user( $username, $password, $user_email );
-
-			if ( is_numeric( $new_userid ) ) {
-
-				//email the user his credentials
-				wp_new_user_notification( $new_userid, $deprecated = null, $notify = 'both' );
-
-				wp_set_auth_cookie ( $new_userid );
-
-				wp_update_user(
-					array(
-						'ID' => $new_userid,
-						'display_name' => $user_name,
-						)
-					);
-						// update buddypress profile
-				if ( function_exists( 'xprofile_set_field_data' ) ) {
-					xprofile_set_field_data('Name', $new_userid, $user_name);
-				}
-
-				if ( function_exists( 'bp_loggedin_user_domain' ) ) {
-					wp_safe_redirect( bp_core_get_user_domain( $new_userid ) );
-				} else {
-					//else just redirect to back to homepage
-					wp_safe_redirect( get_bloginfo( 'url' ) );
-				}
-
-			} else {
-
-				session_destroy();
-				wp_safe_redirect( wp_login_url() . '?error=true&type=gears_username_or_email_exists');
-
-				return;
-			}
+			return;
 
 		}
 

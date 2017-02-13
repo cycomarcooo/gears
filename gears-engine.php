@@ -28,7 +28,7 @@ if (!class_exists('Gears'))
 			add_action('admin_init', array( $this, 'admin_styles' ));
 
 			// BuddyPress config
-			add_action('bp_init', array($this, 'bp_setup'), 0);
+			//add_action('bp_init', array($this, 'bp_setup'), 0);
 
 			return;
 		}
@@ -49,34 +49,14 @@ if (!class_exists('Gears'))
 		 */
 		public function load_modules(){
 
-			$coverPhotoEnabled = apply_filters('gears_cover_photo', '__return_true', 10, 1);
-
-			if ( $coverPhotoEnabled ) {
-				// load bp cover photo
-				require_once GEARS_APP_PATH . '/modules/bp-cover-photo/index.php';
-			}
-
-
-			// load google plus connect
-			require_once GEARS_APP_PATH . '/modules/google-login/index.php';
-
 			// load the shortcodes
 			require_once GEARS_APP_PATH . '/modules/shortcodes/library.php'; new Gears_Shortcodes();
-
-			// Google+ Connect
-			if (!is_user_logged_in() && get_option('users_can_register')) {
-
-				if (function_exists('curl_version')) {
-
-					$google_connect = new GearsGooglePlusConnect();
-
-				}
-			}
 
 			// Facebook Connect
 			$is_ce_module_facebook_login_enabled = apply_filters( 'gears_is_fb_enabled', $this->ot_theme_option( 'is_fb_enabled' ) );
 
-			if( !is_user_logged_in() && $is_ce_module_facebook_login_enabled && get_option('users_can_register') ){
+            if( !is_user_logged_in() && $is_ce_module_facebook_login_enabled ){
+			// if( !is_user_logged_in() && $is_ce_module_facebook_login_enabled && get_option('users_can_register') ){
 
 				// if facebook login is enabled
 				// require the essential plugin
@@ -101,13 +81,12 @@ if (!class_exists('Gears'))
 					$button_label = apply_filters ( 'gears_button_label', $this->ot_theme_option( 'gears_fb_btn_label' , __('Connect w/ Facebook','gears') ) );
 
 					new GearsModulesFacebookLogin(
-							$app_id,
-							$app_secret,
-							$registrant_settings,
-							$button_label
-						);
-				}
-
+						$app_id,
+						$app_secret,
+						$registrant_settings,
+						$button_label
+					);
+                }
 			}
 
 			// Login Modal
@@ -151,12 +130,12 @@ if (!class_exists('Gears'))
 			// define avatar thumbnail width and height
 			// define buddypress contants
 			// that are used in Gears to avoid notices
-			if (!defined('BP_AVATAR_FULL_HEIGHT')){ DEFINE( 'BP_AVATAR_THUMB_WIDTH', 100 ); }
-			if (!defined('BP_AVATAR_THUMB_HEIGHT')){ DEFINE( 'BP_AVATAR_THUMB_HEIGHT', 100 ); }
-			if (!defined('BP_AVATAR_FULL_WIDTH')){ DEFINE( 'BP_AVATAR_FULL_WIDTH', 325 ); }
-			if (!defined('BP_AVATAR_FULL_HEIGHT')){ DEFINE( 'BP_AVATAR_FULL_HEIGHT', 325 ); }
-			if (!defined('BP_AVATAR_ORIGINAL_MAX_WIDTH')){ DEFINE( 'BP_AVATAR_ORIGINAL_MAX_WIDTH', 1000 ); }
-			if (!defined('BP_AVATAR_ORIGINAL_MAX_HEIGHT')){ DEFINE( 'BP_AVATAR_ORIGINAL_MAX_HEIGHT', 1000 ); }
+			// if (!defined('BP_AVATAR_FULL_HEIGHT')){ DEFINE( 'BP_AVATAR_THUMB_WIDTH', 100 ); }
+			// if (!defined('BP_AVATAR_THUMB_HEIGHT')){ DEFINE( 'BP_AVATAR_THUMB_HEIGHT', 100 ); }
+			// if (!defined('BP_AVATAR_FULL_WIDTH')){ DEFINE( 'BP_AVATAR_FULL_WIDTH', 325 ); }
+			// if (!defined('BP_AVATAR_FULL_HEIGHT')){ DEFINE( 'BP_AVATAR_FULL_HEIGHT', 325 ); }
+			// if (!defined('BP_AVATAR_ORIGINAL_MAX_WIDTH')){ DEFINE( 'BP_AVATAR_ORIGINAL_MAX_WIDTH', 1000 ); }
+			// if (!defined('BP_AVATAR_ORIGINAL_MAX_HEIGHT')){ DEFINE( 'BP_AVATAR_ORIGINAL_MAX_HEIGHT', 1000 ); }
 
 			return;
 
